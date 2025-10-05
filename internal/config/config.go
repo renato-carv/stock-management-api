@@ -63,6 +63,16 @@ func SetupDb(cfg *DBConfig) (*sql.DB, error) {
 			UPDATED_AT TIMESTAMP DEFAULT now(),
 			CREATED_BY UUID REFERENCES users(ID)
 		);
+
+		CREATE TABLE IF NOT EXISTS transactions (
+			ID UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+			NAME TEXT NOT NULL,
+			QUANTITY INTEGER NOT NULL,
+			TYPE VARCHAR(10) NOT NULL,
+			CREATED_AT TIMESTAMP DEFAULT now(),
+			UPDATED_AT TIMESTAMP DEFAULT now(),
+			CREATED_BY UUID REFERENCES users(ID)
+		)
 	`)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create table: %w", err)

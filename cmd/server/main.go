@@ -24,10 +24,12 @@ func main() {
 	log.Println("Connected to database")
 	userRepo := repository.NewUserRepository(dbConn)
 	stockRepo := repository.NewStockRepository(dbConn)
+	transactionRepo := repository.NewTransactionRepository(dbConn)
 	userHandler := handler.NewUserHandler(userRepo)
 	stockHandler := handler.NewStockHandler(stockRepo)
+	transactionHandler := handler.NewTransactionHandler(transactionRepo)
 
-	mux := routes.SetupRoutes(userHandler, stockHandler)
+	mux := routes.SetupRoutes(userHandler, stockHandler, transactionHandler)
 	log.Println("Server started on port 8080")
 	log.Fatal(http.ListenAndServe(":8080", mux))
 }

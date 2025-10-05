@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-func SetupRoutes(userHandler *handler.UserHandler, stockHandler *handler.StockHandler) *http.ServeMux {
+func SetupRoutes(userHandler *handler.UserHandler, stockHandler *handler.StockHandler, transactionHandler *handler.TransactionHandler) *http.ServeMux {
 	mux := http.NewServeMux()
 
 	// User routes
@@ -24,6 +24,18 @@ func SetupRoutes(userHandler *handler.UserHandler, stockHandler *handler.StockHa
 			stockHandler.UpdateProductById(w, r)
 		case http.MethodDelete:
 			stockHandler.DeleteProductById(w, r)
+		default:
+			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		}
+	}))
+
+	// Transaction routes
+	mux.HandleFunc("/transaction", middleware.Auth(func(w http.ResponseWriter, r *http.Request) {
+		switch r.Method {
+		case http.MethodPost:
+			transactionHandler.CreateTransaction(w, r)
+		case http.MethodGet:
+			transactionHandler.GetAllTransactions(w, r)
 		default:
 			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		}
